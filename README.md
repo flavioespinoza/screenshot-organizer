@@ -62,11 +62,7 @@ Now every screenshot becomes a searchable record that links the platform's Submi
       "organized_at": "2026-01-08T14:19:23Z",
       "description": "The screenshot shows a confirmation message for a successful submission, including the email, timestamp, submission ID, and uploaded filename.",
       "extracted_data": {
-        "submission_ids": ["299b42ee08de"],
-        "zip_files": ["my-project-id_12345678.zip"],
-        "statuses": [],
         "error_messages": [],
-        "platforms": [],
         "other": {}
       },
       "described_at": "2026-01-08T14:19:25Z"
@@ -76,6 +72,12 @@ Now every screenshot becomes a searchable record that links the platform's Submi
   "date_folders": ["2026-01-08"]
 }
 ```
+
+**Why `error_messages` and `other`?**
+
+- **`error_messages`** — Captures any error text, warnings, or failure messages visible in the screenshot. When a submission fails, the error message tells you exactly what went wrong (e.g., "File too large", "Invalid format", "Build failed: exit code 1").
+
+- **`other`** — A catch-all object for any additional data GPT-4V extracts that doesn't fit the predefined fields. This keeps the schema flexible for unexpected information like notes, timestamps in unusual formats, or platform-specific metadata.
 
 ## Usage
 
