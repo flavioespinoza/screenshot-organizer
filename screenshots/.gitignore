@@ -1,0 +1,15 @@
+# Ignore all screenshot images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+
+# Ignore date folders (they contain screenshots)
+[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+
+# But keep the manifest
+!manifest.json
+
+# Keep this .gitignore
+!.gitignore

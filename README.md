@@ -10,6 +10,15 @@ Auto-organize and analyze screenshots with GPT-4V vision.
 - **Store** everything in a searchable `manifest.json`
 - **Run as daemon** via launchd for hands-free operation
 
+## How It Works
+
+1. **Drop a screenshot** into your screenshots directory
+2. **fswatch detects** the new file
+3. **Date extracted** from filename (e.g., `CleanShot 2026-01-08 at 04.03.48@2x.png`)
+4. **File moved** to date folder (`2026-01-08/`)
+5. **GPT-4V analyzes** the image in background
+6. **Data stored** in `manifest.json`
+
 ## Installation
 
 ### Prerequisites
@@ -143,15 +152,6 @@ Load daemon:
 launchctl load ~/Library/LaunchAgents/com.screenshot-organizer.plist
 ```
 
-## How It Works
-
-1. **Drop a screenshot** into your screenshots directory
-2. **fswatch detects** the new file
-3. **Date extracted** from filename (e.g., `CleanShot 2026-01-08 at 04.03.48@2x.png`)
-4. **File moved** to date folder (`2026-01-08/`)
-5. **GPT-4V analyzes** the image in background
-6. **Data stored** in `manifest.json`
-
 ## Manifest Structure
 
 ```json
@@ -197,6 +197,43 @@ launchctl load ~/Library/LaunchAgents/com.screenshot-organizer.plist
 - CleanShot: `CleanShot 2026-01-08 at 04.03.48@2x.png`
 - macOS Screenshot: `Screenshot 2026-01-08 at 4.03.48 PM.png`
 - Fallback: Uses file modification date
+
+## Supported Image Types
+
+- PNG (`.png`)
+- JPG/JPEG (`.jpg`, `.jpeg`)
+- GIF (`.gif`)
+- WebP (`.webp`)
+
+## Git Integration
+
+The `screenshots/` directory includes a `.gitignore` that:
+- **Ignores** all image files (PNG, JPG, GIF, WebP)
+- **Ignores** date folders containing screenshots
+- **Tracks** only `manifest.json` (searchable metadata)
+
+This keeps your repo clean while preserving the searchable manifest. Screenshots stay local.
+
+## TODO: Homebrew Installation
+
+- [ ] Create Homebrew formula (`screenshot-organizer.rb`)
+- [ ] Set up Homebrew tap (`homebrew-screenshot-organizer`)
+- [ ] Auto-install dependencies (`fswatch`, `jq`)
+- [ ] Install script to `/usr/local/bin/screenshot-organizer`
+- [ ] Install plist template to correct location
+- [ ] Add `brew services` support for daemon management
+- [ ] Post-install instructions for API key setup
+
+**Goal:** Install with a single command:
+```bash
+brew install flavioespinoza/tap/screenshot-organizer
+```
+
+Then manage with:
+```bash
+brew services start screenshot-organizer
+brew services stop screenshot-organizer
+```
 
 ## License
 
