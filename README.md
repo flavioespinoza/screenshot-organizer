@@ -19,48 +19,6 @@ Auto-organize and analyze screenshots with GPT-4V vision.
 5. **GPT-4V analyzes** the image in background
 6. **Data stored** in `manifest.json`
 
-## Installation
-
-### Prerequisites
-
-Install fswatch for file monitoring:
-```bash
-brew install fswatch
-```
-
-Install jq for JSON processing:
-```bash
-brew install jq
-```
-
-### Setup
-
-1. Clone the repository:
-```bash
-git clone https://github.com/flavioespinoza/screenshot-organizer.git
-```
-
-```bash
-cd screenshot-organizer
-```
-
-2. Set your OpenAI API key (add to ~/.zshrc for persistence):
-```bash
-export OPENAI_API_KEY="sk-your-key-here"
-```
-
-3. Install the launchd daemon:
-
-Copy the plist template (edit to add your API key first):
-```bash
-cp com.screenshot-organizer.plist ~/Library/LaunchAgents/
-```
-
-Load the daemon (starts on login):
-```bash
-launchctl load ~/Library/LaunchAgents/com.screenshot-organizer.plist
-```
-
 ## Usage
 
 ### Manual Commands
@@ -213,6 +171,48 @@ The `screenshots/` directory includes a `.gitignore` that:
 - **Tracks** only `manifest.json` (searchable metadata)
 
 This keeps your repo clean while preserving the searchable manifest. Screenshots stay local.
+
+## Installation
+
+### Prerequisites
+
+Install fswatch for file monitoring:
+```bash
+brew install fswatch
+```
+
+Install jq for JSON processing:
+```bash
+brew install jq
+```
+
+### Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/flavioespinoza/screenshot-organizer.git
+```
+
+```bash
+cd screenshot-organizer
+```
+
+2. Set your OpenAI API key (add to ~/.zshrc for persistence):
+```bash
+export OPENAI_API_KEY="sk-your-key-here"
+```
+
+3. Install the launchd daemon:
+
+Copy the plist template (edit to add your API key first):
+```bash
+cp com.screenshot-organizer.plist ~/Library/LaunchAgents/
+```
+
+Load the daemon (starts on login):
+```bash
+launchctl load ~/Library/LaunchAgents/com.screenshot-organizer.plist
+```
 
 ## TODO: Homebrew Installation
 
