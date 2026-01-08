@@ -43,6 +43,8 @@ Now every screenshot becomes a searchable record that links the platform's Submi
 
 ![Screenshot Example](https://github.com/flavioespinoza/screenshot-organizer/blob/feature/custom-directory-support/docs/example-screenshot-v3.png?raw=true)
 
+**Note:** The screenshot shows "Thu Jan 8 7:19 AM" without the year or timezone. The tool reconstructs the full ISO 8601 timestamp (`2026-01-08T14:39:23Z`) from the filename `CleanShot 2026-01-08 at 07.39.21@2x.png`, which contains the exact date and time the screenshot was taken.
+
 ```json
 {
   "last_updated": "2026-01-08T14:39:27Z",
