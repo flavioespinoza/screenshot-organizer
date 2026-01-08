@@ -1,13 +1,56 @@
 #!/bin/bash
 # Screenshot Organizer - Analyzes and archives screenshots into date folders
-# Watches the screenshots/ directory and automatically organizes new files
+# Watches a directory and automatically organizes new files
+#
+# Usage:
+#   ./screenshot-organizer.sh watch [directory]
+#   ./screenshot-organizer.sh --dir /path/to/folder watch
+#
+# Multiple instances can watch different directories simultaneously.
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-SCREENSHOTS_DIR="$PROJECT_ROOT/screenshots"
-LOG_DIR="$HOME/Library/Logs/screenshot-organizer"
+
+# Parse --dir argument if provided
+CUSTOM_DIR=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --dir|-d)
+            CUSTOM_DIR="$2"
+            shift 2
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+# Store remaining args
+COMMAND="${1:-}"
+COMMAND_ARG="${2:-}"
+
+# If a directory was passed as the second argument to a command, use it
+if [[ -z "$CUSTOM_DIR" ]] && [[ -n "$COMMAND_ARG" ]] && [[ -d "$COMMAND_ARG" ]]; then
+    CUSTOM_DIR="$COMMAND_ARG"
+    COMMAND_ARG=""
+fi
+
+# Set screenshots directory (custom or default)
+if [[ -n "$CUSTOM_DIR" ]]; then
+    # Resolve to absolute path
+    SCREENSHOTS_DIR="$(cd "$CUSTOM_DIR" 2>/dev/null && pwd)" || {
+        echo "Error: Directory does not exist: $CUSTOM_DIR"
+        exit 1
+    }
+else
+    # Default: screenshots/ in the same directory as the script
+    SCREENSHOTS_DIR="$SCRIPT_DIR/screenshots"
+fi
+
+# Create a unique log directory based on the watched folder name
+FOLDER_NAME=$(basename "$SCREENSHOTS_DIR")
+LOG_DIR="$HOME/Library/Logs/screenshot-organizer/$FOLDER_NAME"
 MANIFEST="$SCREENSHOTS_DIR/manifest.json"
 
 mkdir -p "$LOG_DIR"
@@ -148,10 +191,10 @@ call_openai_vision() {
     local image_path="$1"
     local prompt="$2"
 
-    # Use CHIEF_OPENAI_API_KEY or fall back to OPENAI_API_KEY
-    local api_key="${CHIEF_OPENAI_API_KEY:-$OPENAI_API_KEY}"
+    # Use OPENAI_API_KEY environment variable
+    local api_key="${OPENAI_API_KEY}"
     if [[ -z "$api_key" ]]; then
-        error "CHIEF_OPENAI_API_KEY or OPENAI_API_KEY not set"
+        error "OPENAI_API_KEY not set"
         return 1
     fi
 
@@ -424,7 +467,7 @@ show_status() {
 }
 
 # Main entry point
-case "${1:-}" in
+case "$COMMAND" in
     watch)
         init_manifest
         watch_screenshots
@@ -438,8 +481,8 @@ case "${1:-}" in
         ;;
     describe)
         init_manifest
-        if [[ -n "${2:-}" ]]; then
-            describe_one "$2"
+        if [[ -n "$COMMAND_ARG" ]]; then
+            describe_one "$COMMAND_ARG"
         else
             describe_all
         fi
@@ -450,15 +493,28 @@ case "${1:-}" in
     *)
         echo "Screenshot Organizer - Organize and analyze screenshots"
         echo ""
-        echo "Usage: $0 <command> [args]"
+        echo "Usage: $0 [--dir <directory>] <command> [args]"
+        echo "       $0 <command> [directory]"
+        echo ""
+        echo "Options:"
+        echo "  --dir, -d <path>  Specify the directory to watch/organize"
         echo ""
         echo "Commands:"
-        echo "  watch           Watch for new screenshots and organize automatically"
-        echo "  organize        Organize all existing screenshots in root directory"
-        echo "  status          Show current status and folder counts"
-        echo "  describe        Analyze all screenshots without descriptions (uses Claude)"
-        echo "  describe <file> Analyze a specific screenshot by filename or path"
-        echo "  descriptions    Show all screenshot descriptions from manifest"
+        echo "  watch [dir]       Watch for new screenshots and organize automatically"
+        echo "  organize [dir]    Organize all existing screenshots in root directory"
+        echo "  status [dir]      Show current status and folder counts"
+        echo "  describe          Analyze all screenshots without descriptions (uses GPT-4V)"
+        echo "  describe <file>   Analyze a specific screenshot by filename or path"
+        echo "  descriptions      Show all screenshot descriptions from manifest"
+        echo ""
+        echo "Examples:"
+        echo "  $0 watch                           # Watch default ./screenshots/ directory"
+        echo "  $0 watch ~/Desktop/Screenshots     # Watch custom directory"
+        echo "  $0 --dir ~/Pictures/Screens watch  # Same as above, alternate syntax"
+        echo ""
+        echo "Multiple Instances:"
+        echo "  You can run multiple instances watching different directories."
+        echo "  Each directory gets its own manifest.json and log files."
         echo ""
         echo "Screenshots are organized by date extracted from filename"
         echo "(e.g., 'CleanShot 2026-01-08 at 04.03.48@2x.png' -> 2026-01-08/)"
