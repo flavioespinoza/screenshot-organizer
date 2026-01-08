@@ -23,23 +23,30 @@ Auto-organize and analyze screenshots with GPT-4V vision.
 
 ## Manifest Structure
 
+**Example:** `CleanShot 2026-01-08 at 07.17.29@2x.png` → analyzed → stored in manifest:
+
+![Screenshot Example](https://github.com/flavioespinoza/screenshot-organizer/blob/main/docs/example-screenshot.png?raw=true)
+
 ```json
 {
-  "last_updated": "2026-01-08T13:41:27Z",
+  "last_updated": "2026-01-08T15:18:42Z",
   "processed_files": [
     {
-      "file": "CleanShot 2026-01-08 at 04.03.48@2x.png",
+      "file": "CleanShot 2026-01-08 at 07.17.29@2x.png",
       "folder": "2026-01-08",
-      "organized_at": "2026-01-08T11:09:18Z",
-      "description": "Screenshot shows a submission interface...",
+      "organized_at": "2026-01-08T14:17:35Z",
+      "description": "Email to CleanShot support describing an issue where the Copy action fails when a custom export location is set in the app preferences.",
       "extracted_data": {
-        "submission_ids": ["3789cdcd-a5b3-4b3c-a792-299b42ee08de"],
-        "statuses": ["PASS", "FAIL"],
-        "error_messages": ["..."],
-        "platforms": ["Snorkel AI Experts Portal"],
-        "other": {}
+        "submission_ids": [],
+        "statuses": [],
+        "error_messages": ["Copy action does not work when a custom export location is set"],
+        "platforms": ["macOS"],
+        "other": {
+          "sender": "Flavio Espinoza",
+          "recipient": "CleanShot Support"
+        }
       },
-      "described_at": "2026-01-08T13:32:09Z"
+      "described_at": "2026-01-08T15:18:42Z"
     }
   ],
   "pending_files": [],
