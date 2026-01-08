@@ -266,6 +266,47 @@ export OPENAI_API_KEY="sk-your-key-here"  # Add to ~/.zshrc
 screenshot-organizer watch ~/Desktop/Screenshots
 ```
 
+## Next Steps
+
+### Custom Manifest Schema
+
+Define your own `extracted_data` fields by creating a custom schema. Instead of using the default fields, you can specify exactly what GPT-4V should extract from your screenshots.
+
+Create a `manifest-schema.json` in your screenshots directory:
+
+```json
+{
+  "extracted_data": {
+    "invoice_number": "string",
+    "amount": "number",
+    "vendor": "string",
+    "due_date": "string",
+    "line_items": "array"
+  }
+}
+```
+
+The tool will use your schema to prompt GPT-4V for those specific fields instead of the defaults.
+
+### Import Existing Screenshots
+
+If you have an existing folder of screenshots, you can import and organize them all at once:
+
+```bash
+# Organize all existing screenshots into date folders
+screenshot-organizer organize ~/Pictures/OldScreenshots
+
+# Then analyze them with GPT-4V
+screenshot-organizer describe ~/Pictures/OldScreenshots
+```
+
+### Planned Features
+
+- **Search command** - `screenshot-organizer search "submission ID 299b42ee"` to grep the manifest
+- **Export to CSV** - Export manifest data for spreadsheet analysis
+- **Web UI** - Browser-based interface for viewing and searching screenshots
+- **Slack integration** - Auto-post organized screenshots to a Slack channel
+
 ## License
 
 MIT
