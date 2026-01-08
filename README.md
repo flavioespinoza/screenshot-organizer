@@ -43,7 +43,14 @@ Now every screenshot becomes a searchable record that links the platform's Submi
 
 ![Screenshot Example](https://github.com/flavioespinoza/screenshot-organizer/blob/feature/custom-directory-support/docs/example-screenshot-v3.png?raw=true)
 
-**Note:** The screenshot shows "Thu Jan 8 7:19 AM" without the year or timezone. The tool reconstructs the full ISO 8601 timestamp (`2026-01-08T14:19:21Z`) from the filename `CleanShot 2026-01-08 at 07.19.21@2x.png`, which contains the exact date and time the screenshot was taken.
+**What GPT-4V extracted and corrected:**
+
+1. **Submission ID** → `299b42ee08de` (extracted from screenshot)
+2. **Project ID** → `my-project-id_12345678` (extracted from "File Uploaded" field, maps to Submission ID above)
+3. **Year** → `2026` (missing from screenshot, derived from filename)
+4. **Timezone** → Converted to UTC (screenshot shows local time "7:19 AM", stored as `2026-01-08T14:19:21Z`)
+5. **Full timestamp** → Reconstructed from filename `CleanShot 2026-01-08 at 07.19.21@2x.png`
+6. **Date folder** → `2026-01-08/` (auto-organized based on extracted date)
 
 ```json
 {
