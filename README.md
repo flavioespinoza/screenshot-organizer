@@ -19,6 +19,8 @@ Auto-organize and analyze screenshots with GPT-4V vision.
 5. **GPT-4V analyzes** the image in background
 6. **Data stored** in `manifest.json`
 
+**→ [Jump to Installation](#installation)**
+
 ## Usage
 
 ### Manual Commands
