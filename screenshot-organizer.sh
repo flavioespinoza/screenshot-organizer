@@ -1,56 +1,13 @@
 #!/bin/bash
 # Screenshot Organizer - Analyzes and archives screenshots into date folders
-# Watches a directory and automatically organizes new files
-#
-# Usage:
-#   ./screenshot-organizer.sh watch [directory]
-#   ./screenshot-organizer.sh --dir /path/to/folder watch
-#
-# Multiple instances can watch different directories simultaneously.
+# Watches the screenshots/ directory and automatically organizes new files
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Parse --dir argument if provided
-CUSTOM_DIR=""
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        --dir|-d)
-            CUSTOM_DIR="$2"
-            shift 2
-            ;;
-        *)
-            break
-            ;;
-    esac
-done
-
-# Store remaining args
-COMMAND="${1:-}"
-COMMAND_ARG="${2:-}"
-
-# If a directory was passed as the second argument to a command, use it
-if [[ -z "$CUSTOM_DIR" ]] && [[ -n "$COMMAND_ARG" ]] && [[ -d "$COMMAND_ARG" ]]; then
-    CUSTOM_DIR="$COMMAND_ARG"
-    COMMAND_ARG=""
-fi
-
-# Set screenshots directory (custom or default)
-if [[ -n "$CUSTOM_DIR" ]]; then
-    # Resolve to absolute path
-    SCREENSHOTS_DIR="$(cd "$CUSTOM_DIR" 2>/dev/null && pwd)" || {
-        echo "Error: Directory does not exist: $CUSTOM_DIR"
-        exit 1
-    }
-else
-    # Default: screenshots/ in the same directory as the script
-    SCREENSHOTS_DIR="$SCRIPT_DIR/screenshots"
-fi
-
-# Create a unique log directory based on the watched folder name
-FOLDER_NAME=$(basename "$SCREENSHOTS_DIR")
-LOG_DIR="$HOME/Library/Logs/screenshot-organizer/$FOLDER_NAME"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+SCREENSHOTS_DIR="$PROJECT_ROOT/screenshots"
+LOG_DIR="$HOME/Library/Logs/screenshot-organizer"
 MANIFEST="$SCREENSHOTS_DIR/manifest.json"
 
 mkdir -p "$LOG_DIR"
@@ -106,6 +63,7 @@ get_file_date() {
 }
 
 # Organize a single screenshot into its date folder
+# NEW FLOW: Read image → Analyze → Add to manifest → Verify → THEN move to archive
 organize_screenshot() {
     local file="$1"
     local filename=$(basename "$file")
@@ -125,29 +83,136 @@ organize_screenshot() {
         return 0
     fi
 
-    # Extract date from filename or fallback to file date
+    log "Processing: $filename"
+
+    # STEP 1: Analyze the image FIRST (while still in root)
+    log "Step 1: Analyzing image..."
+    local analysis_result
+    analysis_result=$(analyze_screenshot_sync "$file")
+
+    if [[ -z "$analysis_result" ]]; then
+        error "Failed to analyze $filename - skipping"
+        return 1
+    fi
+
+    # STEP 2: Extract date from filename or fallback to file date
     local date_folder
     date_folder=$(extract_date_from_filename "$filename") || date_folder=$(get_file_date "$file")
 
-    # Create date folder if needed
+    # STEP 3: Add ALL metadata to manifest BEFORE moving
+    log "Step 2: Adding to manifest with full metadata..."
+    local description=$(echo "$analysis_result" | jq -r '.description // "No description"')
+    local extracted_data=$(echo "$analysis_result" | jq -c '.extracted_data // {}')
+
+    add_to_manifest_complete "$filename" "$date_folder" "$description" "$extracted_data"
+
+    # STEP 4: Verify manifest was updated
+    log "Step 3: Verifying manifest entry..."
+    local verify=$(jq --arg f "$filename" '.processed_files[] | select(.file == $f) | .description' "$MANIFEST" 2>/dev/null)
+
+    if [[ -z "$verify" ]] || [[ "$verify" == "null" ]]; then
+        error "Manifest verification FAILED for $filename"
+        return 1
+    fi
+    log "Manifest verified: $filename has description"
+
+    # STEP 5: NOW move to date folder
+    log "Step 4: Moving to archive folder..."
     local target_dir="$SCREENSHOTS_DIR/$date_folder"
     mkdir -p "$target_dir"
 
-    # Move file to date folder
     local target_path="$target_dir/$filename"
     if [[ "$file" != "$target_path" ]]; then
         mv "$file" "$target_path"
-        log "Organized: $filename -> $date_folder/"
-
-        # Update manifest
-        update_manifest "$filename" "$date_folder"
-
-        # Auto-analyze the screenshot for description
-        analyze_screenshot "$target_path" &
+        log "COMPLETE: $filename -> $date_folder/ (with full metadata)"
     fi
 }
 
-# Update manifest with organized file
+# Synchronous analyze - returns JSON result (not async)
+analyze_screenshot_sync() {
+    local file="$1"
+    local filename=$(basename "$file")
+
+    if [[ ! -f "$file" ]]; then
+        error "File not found: $file"
+        return 1
+    fi
+
+    local prompt='Analyze this screenshot and extract information.
+
+Respond ONLY with valid JSON in this exact format (no other text, no markdown):
+{
+  "description": "Brief 1-2 sentence description of what the screenshot shows",
+  "extracted_data": {
+    "submission_ids": ["list any submission IDs or UUIDs found"],
+    "iteration_ids": ["list any iteration IDs found"],
+    "task_ids": ["list any task IDs found"],
+    "zip_files": ["list any zip filenames found"],
+    "statuses": ["list any status indicators like PASS, FAIL, PENDING"],
+    "error_messages": ["list any error messages found"],
+    "build_ids": ["list any build IDs found"],
+    "platforms": ["list any platform names like terminus, harbor, marlin"],
+    "other": {}
+  }
+}
+
+If a field has no data, use an empty array []. Always return valid JSON.'
+
+    local result
+    result=$(call_openai_vision "$file" "$prompt")
+
+    if [[ -z "$result" ]]; then
+        error "OpenAI API returned empty response for $filename"
+        return 1
+    fi
+
+    # Try to parse directly as JSON
+    if echo "$result" | jq . &>/dev/null; then
+        echo "$result"
+    else
+        # Try to extract JSON from response
+        local json_part=$(echo "$result" | grep -o '{.*}' | head -1)
+        if [[ -n "$json_part" ]] && echo "$json_part" | jq . &>/dev/null; then
+            echo "$json_part"
+        else
+            # Return minimal valid JSON
+            echo '{"description": "'"$(echo "$result" | head -1 | tr -d '"')"'", "extracted_data": {}}'
+        fi
+    fi
+}
+
+# Add complete entry to manifest with ALL metadata at once
+add_to_manifest_complete() {
+    local filename="$1"
+    local date_folder="$2"
+    local description="$3"
+    local extracted_data="$4"
+    local temp_file=$(mktemp)
+    local timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+    jq --arg file "$filename" \
+       --arg folder "$date_folder" \
+       --arg desc "$description" \
+       --arg data "$extracted_data" \
+       --arg ts "$timestamp" '
+        .processed_files += [{
+            "file": $file,
+            "folder": $folder,
+            "description": $desc,
+            "extracted_data": ($data | fromjson? // {}),
+            "organized_at": $ts,
+            "described_at": $ts
+        }] |
+        .last_updated = $ts |
+        if (.date_folders | index($folder)) == null then
+            .date_folders += [$folder]
+        else . end
+    ' "$MANIFEST" > "$temp_file" && mv "$temp_file" "$MANIFEST"
+
+    log "Manifest updated: $filename with description and extracted_data"
+}
+
+# Update manifest with organized file (legacy - kept for compatibility)
 update_manifest() {
     local filename="$1"
     local date_folder="$2"
@@ -191,10 +256,10 @@ call_openai_vision() {
     local image_path="$1"
     local prompt="$2"
 
-    # Use OPENAI_API_KEY environment variable
-    local api_key="${OPENAI_API_KEY}"
+    # Use CHIEF_OPENAI_API_KEY or fall back to OPENAI_API_KEY
+    local api_key="${CHIEF_OPENAI_API_KEY:-$OPENAI_API_KEY}"
     if [[ -z "$api_key" ]]; then
-        error "OPENAI_API_KEY not set"
+        error "CHIEF_OPENAI_API_KEY or OPENAI_API_KEY not set"
         return 1
     fi
 
@@ -467,7 +532,7 @@ show_status() {
 }
 
 # Main entry point
-case "$COMMAND" in
+case "${1:-}" in
     watch)
         init_manifest
         watch_screenshots
@@ -481,8 +546,8 @@ case "$COMMAND" in
         ;;
     describe)
         init_manifest
-        if [[ -n "$COMMAND_ARG" ]]; then
-            describe_one "$COMMAND_ARG"
+        if [[ -n "${2:-}" ]]; then
+            describe_one "$2"
         else
             describe_all
         fi
@@ -493,28 +558,15 @@ case "$COMMAND" in
     *)
         echo "Screenshot Organizer - Organize and analyze screenshots"
         echo ""
-        echo "Usage: $0 [--dir <directory>] <command> [args]"
-        echo "       $0 <command> [directory]"
-        echo ""
-        echo "Options:"
-        echo "  --dir, -d <path>  Specify the directory to watch/organize"
+        echo "Usage: $0 <command> [args]"
         echo ""
         echo "Commands:"
-        echo "  watch [dir]       Watch for new screenshots and organize automatically"
-        echo "  organize [dir]    Organize all existing screenshots in root directory"
-        echo "  status [dir]      Show current status and folder counts"
-        echo "  describe          Analyze all screenshots without descriptions (uses GPT-4V)"
-        echo "  describe <file>   Analyze a specific screenshot by filename or path"
-        echo "  descriptions      Show all screenshot descriptions from manifest"
-        echo ""
-        echo "Examples:"
-        echo "  $0 watch                           # Watch default ./screenshots/ directory"
-        echo "  $0 watch ~/Desktop/Screenshots     # Watch custom directory"
-        echo "  $0 --dir ~/Pictures/Screens watch  # Same as above, alternate syntax"
-        echo ""
-        echo "Multiple Instances:"
-        echo "  You can run multiple instances watching different directories."
-        echo "  Each directory gets its own manifest.json and log files."
+        echo "  watch           Watch for new screenshots and organize automatically"
+        echo "  organize        Organize all existing screenshots in root directory"
+        echo "  status          Show current status and folder counts"
+        echo "  describe        Analyze all screenshots without descriptions (uses Claude)"
+        echo "  describe <file> Analyze a specific screenshot by filename or path"
+        echo "  descriptions    Show all screenshot descriptions from manifest"
         echo ""
         echo "Screenshots are organized by date extracted from filename"
         echo "(e.g., 'CleanShot 2026-01-08 at 04.03.48@2x.png' -> 2026-01-08/)"
