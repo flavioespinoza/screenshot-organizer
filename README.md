@@ -23,30 +23,27 @@ Auto-organize and analyze screenshots with GPT-4V vision.
 
 ## Manifest Structure
 
-**Example:** `CleanShot 2026-01-08 at 07.17.29@2x.png` → analyzed → stored in manifest:
+**Example:** `CleanShot 2026-01-08 at 07.29.43@2x.png` → analyzed → stored in manifest:
 
 ![Screenshot Example](https://github.com/flavioespinoza/screenshot-organizer/blob/main/docs/example-screenshot.png?raw=true)
 
 ```json
 {
-  "last_updated": "2026-01-08T15:18:42Z",
+  "last_updated": "2026-01-08T14:29:55Z",
   "processed_files": [
     {
-      "file": "CleanShot 2026-01-08 at 07.17.29@2x.png",
+      "file": "CleanShot 2026-01-08 at 07.29.43@2x.png",
       "folder": "2026-01-08",
-      "organized_at": "2026-01-08T14:17:35Z",
-      "description": "Email to CleanShot support describing an issue where the Copy action fails when a custom export location is set in the app preferences.",
+      "organized_at": "2026-01-08T14:29:52Z",
+      "description": "The screenshot confirms a successful submission, showing the email, date and time of submission, and a submission ID.",
       "extracted_data": {
-        "submission_ids": [],
-        "statuses": [],
-        "error_messages": ["Copy action does not work when a custom export location is set"],
-        "platforms": ["macOS"],
-        "other": {
-          "sender": "Flavio Espinoza",
-          "recipient": "CleanShot Support"
-        }
+        "submission_ids": ["299b42ee08de"],
+        "statuses": ["SUCCESS"],
+        "error_messages": [],
+        "platforms": [],
+        "other": {}
       },
-      "described_at": "2026-01-08T15:18:42Z"
+      "described_at": "2026-01-08T14:29:55Z"
     }
   ],
   "pending_files": [],
