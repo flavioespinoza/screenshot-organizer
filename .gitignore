@@ -1,0 +1,12 @@
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# Actual plist with API key
+com.screenshot-organizer.plist
+
+# Screenshots data (optional - uncomment if you want to track)
+# manifest.json
+# */
