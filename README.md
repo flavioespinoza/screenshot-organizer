@@ -6,9 +6,11 @@ Auto-organize and analyze screenshots with GPT-4V vision.
 
 This tool was born out of necessity. When uploading multiple submissions to a platform that didn't provide downloadable receipts, the only way to track what was submitted was to take screenshots. But screenshots pile up fast, and matching them back to specific submissions became a nightmare.
 
-The core problem: **the platform's Submission ID didn't map to our Project ID**. We needed a way to link the platform's receipt (showing their Submission ID) back to our internal project (identified by the uploaded filename like `proposal_12345678.zip`).
+The core problem: **the platform's dashboard only showed their Submission ID, not our Project name**. When we logged into the submission platform, we saw a table of uploads with columns like "Submission ID", "Date", and "Status" - but no column for the filename we uploaded. So if we had 20 pending submissions, we couldn't tell which Submission ID belonged to which project.
 
-Screenshot Organizer solves this by:
+The only place our Project ID appeared was on the upload confirmation screen (in the "File Uploaded" field like `proposal_12345678.zip`). So we started screenshotting every upload confirmation to create our own mapping.
+
+Screenshot Organizer automates this by:
 - **Auto-organizing** screenshots into date folders the moment they're taken
 - **Extracting submission IDs** from the platform's confirmation screen
 - **Extracting zip filenames** that contain your project ID (e.g., `proposal_12345678.zip`)
