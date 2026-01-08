@@ -21,6 +21,32 @@ Auto-organize and analyze screenshots with GPT-4V vision.
 
 **→ [Jump to Installation](#installation)**
 
+## Manifest Structure
+
+```json
+{
+  "last_updated": "2026-01-08T13:41:27Z",
+  "processed_files": [
+    {
+      "file": "CleanShot 2026-01-08 at 04.03.48@2x.png",
+      "folder": "2026-01-08",
+      "organized_at": "2026-01-08T11:09:18Z",
+      "description": "Screenshot shows a submission interface...",
+      "extracted_data": {
+        "submission_ids": ["3789cdcd-a5b3-4b3c-a792-299b42ee08de"],
+        "statuses": ["PASS", "FAIL"],
+        "error_messages": ["..."],
+        "platforms": ["Snorkel AI Experts Portal"],
+        "other": {}
+      },
+      "described_at": "2026-01-08T13:32:09Z"
+    }
+  ],
+  "pending_files": [],
+  "date_folders": ["2026-01-08"]
+}
+```
+
 ## Usage
 
 ### Manual Commands
@@ -110,32 +136,6 @@ launchctl unload ~/Library/LaunchAgents/com.screenshot-organizer.plist
 Load daemon:
 ```bash
 launchctl load ~/Library/LaunchAgents/com.screenshot-organizer.plist
-```
-
-## Manifest Structure
-
-```json
-{
-  "last_updated": "2026-01-08T13:41:27Z",
-  "processed_files": [
-    {
-      "file": "CleanShot 2026-01-08 at 04.03.48@2x.png",
-      "folder": "2026-01-08",
-      "organized_at": "2026-01-08T11:09:18Z",
-      "description": "Screenshot shows a submission interface...",
-      "extracted_data": {
-        "submission_ids": ["3789cdcd-a5b3-4b3c-a792-299b42ee08de"],
-        "statuses": ["PASS", "FAIL"],
-        "error_messages": ["..."],
-        "platforms": ["Snorkel AI Experts Portal"],
-        "other": {}
-      },
-      "described_at": "2026-01-08T13:32:09Z"
-    }
-  ],
-  "pending_files": [],
-  "date_folders": ["2026-01-08"]
-}
 ```
 
 ## Extracted Data Fields
