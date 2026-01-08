@@ -78,7 +78,7 @@ Analyze all screenshots without descriptions:
 
 Analyze a specific screenshot:
 ```bash
-./screenshot-organizer.sh describe "CleanShot 2026-01-08 at 04.03.48@2x.png"
+./screenshot-organizer.sh describe <filename>
 ```
 
 Show all descriptions:
