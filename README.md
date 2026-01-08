@@ -36,7 +36,7 @@ Now every screenshot becomes a searchable record, automatically linked to the su
 
 **Example:** `CleanShot 2026-01-08 at 07.39.21@2x.png` → analyzed → stored in manifest:
 
-![Screenshot Example](https://github.com/flavioespinoza/screenshot-organizer/blob/main/docs/example-screenshot.png?raw=true)
+![Screenshot Example](https://github.com/flavioespinoza/screenshot-organizer/blob/feature/custom-directory-support/docs/example-screenshot.png?raw=true)
 
 ```json
 {
