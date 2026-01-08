@@ -68,7 +68,6 @@ Now every screenshot becomes a searchable record that links the platform's Submi
       "described_at": "2026-01-08T14:19:25Z"
     }
   ],
-  "pending_files": [],
   "date_folders": ["2026-01-08"]
 }
 ```
