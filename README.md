@@ -34,27 +34,28 @@ Now every screenshot becomes a searchable record, automatically linked to the su
 
 ## Manifest Structure
 
-**Example:** `CleanShot 2026-01-08 at 07.29.43@2x.png` → analyzed → stored in manifest:
+**Example:** `CleanShot 2026-01-08 at 07.39.21@2x.png` → analyzed → stored in manifest:
 
 ![Screenshot Example](https://github.com/flavioespinoza/screenshot-organizer/blob/main/docs/example-screenshot.png?raw=true)
 
 ```json
 {
-  "last_updated": "2026-01-08T14:29:55Z",
+  "last_updated": "2026-01-08T14:39:27Z",
   "processed_files": [
     {
-      "file": "CleanShot 2026-01-08 at 07.29.43@2x.png",
+      "file": "CleanShot 2026-01-08 at 07.39.21@2x.png",
       "folder": "2026-01-08",
-      "organized_at": "2026-01-08T14:29:52Z",
-      "description": "The screenshot confirms a successful submission, showing the email, date and time of submission, and a submission ID.",
+      "organized_at": "2026-01-08T14:39:23Z",
+      "description": "The screenshot shows a confirmation message for a successful submission, including the email, timestamp, submission ID, and uploaded filename.",
       "extracted_data": {
         "submission_ids": ["299b42ee08de"],
-        "statuses": ["SUCCESS"],
+        "zip_files": ["proposal_12345678.zip"],
+        "statuses": [],
         "error_messages": [],
         "platforms": [],
         "other": {}
       },
-      "described_at": "2026-01-08T14:29:55Z"
+      "described_at": "2026-01-08T14:39:27Z"
     }
   ],
   "pending_files": [],
