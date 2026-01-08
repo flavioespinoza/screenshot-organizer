@@ -247,25 +247,23 @@ Load the daemon (starts on login):
 launchctl load ~/Library/LaunchAgents/com.screenshot-organizer.plist
 ```
 
-## TODO: Homebrew Installation
+## Homebrew Installation (Coming Soon)
 
-- [ ] Create Homebrew formula (`screenshot-organizer.rb`)
-- [ ] Set up Homebrew tap (`homebrew-screenshot-organizer`)
-- [ ] Auto-install dependencies (`fswatch`, `jq`)
-- [ ] Install script to `/usr/local/bin/screenshot-organizer`
-- [ ] Install plist template to correct location
-- [ ] Add `brew services` support for daemon management
-- [ ] Post-install instructions for API key setup
-
-**Goal:** Install with a single command:
+Install with a single command:
 ```bash
-brew install flavioespinoza/tap/screenshot-organizer
+brew tap flavioespinoza/tap
+brew install screenshot-organizer
 ```
 
-Then manage with:
+This will:
+- Install `fswatch` and `jq` dependencies automatically
+- Install `screenshot-organizer` to your PATH
+- Provide the launchd plist template
+
+After installation, set your API key and start the service:
 ```bash
-brew services start screenshot-organizer
-brew services stop screenshot-organizer
+export OPENAI_API_KEY="sk-your-key-here"  # Add to ~/.zshrc
+screenshot-organizer watch ~/Desktop/Screenshots
 ```
 
 ## License
