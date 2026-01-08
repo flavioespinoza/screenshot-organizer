@@ -30,18 +30,13 @@ git clone https://github.com/flavioespinoza/screenshot-organizer.git
 cd screenshot-organizer
 ```
 
-2. Configure the screenshots directory (edit `screenshot-organizer.sh`):
+2. Set your OpenAI API key:
 ```bash
-SCREENSHOTS_DIR="$HOME/Screenshots"  # Change to your preferred location
-```
-
-3. Set your OpenAI API key:
-```bash
-export CHIEF_OPENAI_API_KEY="sk-your-key-here"
+export OPENAI_API_KEY="sk-your-key-here"
 # Or add to ~/.zshrc
 ```
 
-4. Install the launchd daemon:
+3. Install the launchd daemon:
 ```bash
 # Edit the plist to add your API key
 cp com.screenshot-organizer.plist ~/Library/LaunchAgents/
@@ -73,6 +68,35 @@ launchctl load ~/Library/LaunchAgents/com.screenshot-organizer.plist
 # Show all descriptions
 ./screenshot-organizer.sh descriptions
 ```
+
+### Watching Custom Directories
+
+You can pass a directory path to watch any folder:
+
+```bash
+# Watch a specific directory
+./screenshot-organizer.sh watch ~/Desktop/Screenshots
+
+# Alternate syntax with --dir flag
+./screenshot-organizer.sh --dir ~/Desktop/Screenshots watch
+
+# Check status of a specific directory
+./screenshot-organizer.sh status ~/Pictures/Screens
+```
+
+### Running Multiple Instances
+
+You can run multiple instances watching different directories simultaneously. Each directory gets its own `manifest.json` and separate log files:
+
+```bash
+# Terminal 1 - watch Desktop screenshots
+./screenshot-organizer.sh watch ~/Desktop/Screenshots
+
+# Terminal 2 - watch another folder
+./screenshot-organizer.sh watch ~/Pictures/CleanShot
+```
+
+Logs are stored per-directory at `~/Library/Logs/screenshot-organizer/<folder-name>/`.
 
 ### Daemon Management
 
