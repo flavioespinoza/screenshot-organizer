@@ -8,12 +8,12 @@ This tool was born out of necessity. When uploading multiple submissions to a pl
 
 The core problem: **the platform's dashboard only showed their Submission ID, not our Project name**. When we logged into the submission platform, we saw a table of uploads with columns like "Submission ID", "Date", and "Status" - but no column for the filename we uploaded. So if we had 20 pending submissions, we couldn't tell which Submission ID belonged to which project.
 
-The only place our Project ID appeared was on the upload confirmation screen (in the "File Uploaded" field like `proposal_12345678.zip`). So we started screenshotting every upload confirmation to create our own mapping.
+The only place our Project ID appeared was on the upload confirmation screen (in the "File Uploaded" field like `my-project-id_12345678.zip`). So we started screenshotting every upload confirmation to create our own mapping.
 
 Screenshot Organizer automates this by:
 - **Auto-organizing** screenshots into date folders the moment they're taken
 - **Extracting submission IDs** from the platform's confirmation screen
-- **Extracting zip filenames** that contain your project ID (e.g., `proposal_12345678.zip`)
+- **Extracting zip filenames** that contain your project ID (e.g., `my-project-id_12345678.zip`)
 - **Storing everything** in a searchable `manifest.json` so you can match any submission to your project
 
 Now every screenshot becomes a searchable record that links the platform's Submission ID to your Project ID via the uploaded filename.
@@ -41,7 +41,7 @@ Now every screenshot becomes a searchable record that links the platform's Submi
 
 **Example:** `CleanShot 2026-01-08 at 07.39.21@2x.png` → analyzed → stored in manifest:
 
-![Screenshot Example](https://github.com/flavioespinoza/screenshot-organizer/blob/feature/custom-directory-support/docs/example-screenshot-v2.png?raw=true)
+![Screenshot Example](https://github.com/flavioespinoza/screenshot-organizer/blob/feature/custom-directory-support/docs/example-screenshot-v3.png?raw=true)
 
 ```json
 {
@@ -54,7 +54,7 @@ Now every screenshot becomes a searchable record that links the platform's Submi
       "description": "The screenshot shows a confirmation message for a successful submission, including the email, timestamp, submission ID, and uploaded filename.",
       "extracted_data": {
         "submission_ids": ["299b42ee08de"],
-        "zip_files": ["proposal_12345678.zip"],
+        "zip_files": ["my-project-id_12345678.zip"],
         "statuses": [],
         "error_messages": [],
         "platforms": [],
