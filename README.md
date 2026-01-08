@@ -14,11 +14,13 @@ Auto-organize and analyze screenshots with GPT-4V vision.
 
 ### Prerequisites
 
+Install fswatch for file monitoring:
 ```bash
-# Install fswatch for file monitoring
 brew install fswatch
+```
 
-# Install jq for JSON processing
+Install jq for JSON processing:
+```bash
 brew install jq
 ```
 
@@ -27,21 +29,26 @@ brew install jq
 1. Clone the repository:
 ```bash
 git clone https://github.com/flavioespinoza/screenshot-organizer.git
+```
+
+```bash
 cd screenshot-organizer
 ```
 
-2. Set your OpenAI API key:
+2. Set your OpenAI API key (add to ~/.zshrc for persistence):
 ```bash
 export OPENAI_API_KEY="sk-your-key-here"
-# Or add to ~/.zshrc
 ```
 
 3. Install the launchd daemon:
-```bash
-# Edit the plist to add your API key
-cp com.screenshot-organizer.plist ~/Library/LaunchAgents/
 
-# Load the daemon (starts on login)
+Copy the plist template (edit to add your API key first):
+```bash
+cp com.screenshot-organizer.plist ~/Library/LaunchAgents/
+```
+
+Load the daemon (starts on login):
+```bash
 launchctl load ~/Library/LaunchAgents/com.screenshot-organizer.plist
 ```
 
@@ -49,50 +56,66 @@ launchctl load ~/Library/LaunchAgents/com.screenshot-organizer.plist
 
 ### Manual Commands
 
+Check status - shows files needing organization and folder counts:
 ```bash
-# Check status - shows files needing organization and folder counts
 ./screenshot-organizer.sh status
+```
 
-# Organize all screenshots in root directory
+Organize all screenshots in root directory:
+```bash
 ./screenshot-organizer.sh organize
+```
 
-# Watch for new screenshots (runs continuously)
+Watch for new screenshots (runs continuously):
+```bash
 ./screenshot-organizer.sh watch
+```
 
-# Analyze all screenshots without descriptions
+Analyze all screenshots without descriptions:
+```bash
 ./screenshot-organizer.sh describe
+```
 
-# Analyze a specific screenshot
+Analyze a specific screenshot:
+```bash
 ./screenshot-organizer.sh describe "CleanShot 2026-01-08 at 04.03.48@2x.png"
+```
 
-# Show all descriptions
+Show all descriptions:
+```bash
 ./screenshot-organizer.sh descriptions
 ```
 
 ### Watching Custom Directories
 
-You can pass a directory path to watch any folder:
+You can pass a directory path to watch any folder.
 
+Watch a specific directory:
 ```bash
-# Watch a specific directory
 ./screenshot-organizer.sh watch ~/Desktop/Screenshots
+```
 
-# Alternate syntax with --dir flag
+Alternate syntax with --dir flag:
+```bash
 ./screenshot-organizer.sh --dir ~/Desktop/Screenshots watch
+```
 
-# Check status of a specific directory
+Check status of a specific directory:
+```bash
 ./screenshot-organizer.sh status ~/Pictures/Screens
 ```
 
 ### Running Multiple Instances
 
-You can run multiple instances watching different directories simultaneously. Each directory gets its own `manifest.json` and separate log files:
+You can run multiple instances watching different directories simultaneously. Each directory gets its own `manifest.json` and separate log files.
 
+Terminal 1 - watch Desktop screenshots:
 ```bash
-# Terminal 1 - watch Desktop screenshots
 ./screenshot-organizer.sh watch ~/Desktop/Screenshots
+```
 
-# Terminal 2 - watch another folder
+Terminal 2 - watch another folder:
+```bash
 ./screenshot-organizer.sh watch ~/Pictures/CleanShot
 ```
 
@@ -100,15 +123,23 @@ Logs are stored per-directory at `~/Library/Logs/screenshot-organizer/<folder-na
 
 ### Daemon Management
 
+Check if running:
 ```bash
-# Check if running
 launchctl list | grep screenshot-organizer
+```
 
-# View logs
+View logs:
+```bash
 tail -f ~/Library/Logs/screenshot-organizer/organizer.log
+```
 
-# Restart daemon
+Unload daemon:
+```bash
 launchctl unload ~/Library/LaunchAgents/com.screenshot-organizer.plist
+```
+
+Load daemon:
+```bash
 launchctl load ~/Library/LaunchAgents/com.screenshot-organizer.plist
 ```
 
