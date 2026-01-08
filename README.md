@@ -39,20 +39,20 @@ Now every screenshot becomes a searchable record that links the platform's Submi
 
 ## Manifest Structure
 
-**Example:** `CleanShot 2026-01-08 at 07.39.21@2x.png` → analyzed → stored in manifest:
+**Example:** `CleanShot 2026-01-08 at 07.19.21@2x.png` → analyzed → stored in manifest:
 
 ![Screenshot Example](https://github.com/flavioespinoza/screenshot-organizer/blob/feature/custom-directory-support/docs/example-screenshot-v3.png?raw=true)
 
-**Note:** The screenshot shows "Thu Jan 8 7:19 AM" without the year or timezone. The tool reconstructs the full ISO 8601 timestamp (`2026-01-08T14:39:23Z`) from the filename `CleanShot 2026-01-08 at 07.39.21@2x.png`, which contains the exact date and time the screenshot was taken.
+**Note:** The screenshot shows "Thu Jan 8 7:19 AM" without the year or timezone. The tool reconstructs the full ISO 8601 timestamp (`2026-01-08T14:19:21Z`) from the filename `CleanShot 2026-01-08 at 07.19.21@2x.png`, which contains the exact date and time the screenshot was taken.
 
 ```json
 {
-  "last_updated": "2026-01-08T14:39:27Z",
+  "last_updated": "2026-01-08T14:19:25Z",
   "processed_files": [
     {
-      "file": "CleanShot 2026-01-08 at 07.39.21@2x.png",
+      "file": "CleanShot 2026-01-08 at 07.19.21@2x.png",
       "folder": "2026-01-08",
-      "organized_at": "2026-01-08T14:39:23Z",
+      "organized_at": "2026-01-08T14:19:23Z",
       "description": "The screenshot shows a confirmation message for a successful submission, including the email, timestamp, submission ID, and uploaded filename.",
       "extracted_data": {
         "submission_ids": ["299b42ee08de"],
@@ -62,7 +62,7 @@ Now every screenshot becomes a searchable record that links the platform's Submi
         "platforms": [],
         "other": {}
       },
-      "described_at": "2026-01-08T14:39:27Z"
+      "described_at": "2026-01-08T14:19:25Z"
     }
   ],
   "pending_files": [],
