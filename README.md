@@ -247,7 +247,7 @@ Load the daemon (starts on login):
 launchctl load ~/Library/LaunchAgents/com.screenshot-organizer.plist
 ```
 
-## Homebrew Installation (Coming Soon)
+## Homebrew Installation
 
 Install with a single command:
 ```bash

@@ -2,7 +2,7 @@ class ScreenshotOrganizer < Formula
   desc "Auto-organize and analyze screenshots with GPT-4V vision"
   homepage "https://github.com/flavioespinoza/screenshot-organizer"
   url "https://github.com/flavioespinoza/screenshot-organizer/archive/refs/tags/v1.0.0.tar.gz"
-  sha256 "PLACEHOLDER_SHA256"
+  sha256 "bb8ec537d856bd5c182d11a7e300a8935c64f7233b435ba81a0fa9ac43035f85"
   license "MIT"
 
   depends_on "fswatch"
