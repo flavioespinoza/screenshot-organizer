@@ -2,6 +2,17 @@
 
 Auto-organize and analyze screenshots with GPT-4V vision.
 
+## Motivation
+
+This tool was born out of necessity. When uploading multiple submissions to a platform that didn't provide downloadable receipts, the only way to track what was submitted was to take screenshots. But screenshots pile up fast, and matching them back to specific submissions became a nightmare.
+
+Screenshot Organizer solves this by:
+- **Auto-organizing** screenshots into date folders the moment they're taken
+- **Extracting submission IDs**, timestamps, and other structured data using GPT-4V
+- **Storing everything** in a searchable `manifest.json` so you can find any submission later
+
+Now every screenshot becomes a searchable record, automatically linked to the submission it captured.
+
 ## Features
 
 - **Auto-organize** screenshots into date folders based on filename timestamps
