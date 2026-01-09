@@ -61,15 +61,10 @@ Now every screenshot becomes a searchable record that links the platform's Submi
         "submission_ids": [
           "299b42ee08de"
         ],
-        "iteration_ids": [],
-        "task_ids": [],
         "zip_files": [
           "my-project-id_12345678.zip"
         ],
-        "statuses": [],
         "error_messages": [],
-        "build_ids": [],
-        "platforms": [],
         "other": {}
       },
       "organized_at": "2026-01-09T11:49:11Z",
