@@ -53,23 +53,28 @@ Now every screenshot becomes a searchable record that links the platform's Submi
 6. **Date folder** → `2026-01-08/` (auto-organized based on extracted date)
 
 ```json
-{
-  "last_updated": "2026-01-08T14:19:25Z",
-  "processed_files": [
     {
-      "file": "CleanShot 2026-01-08 at 07.19.21@2x.png",
-      "folder": "2026-01-08",
-      "organized_at": "2026-01-08T14:19:23Z",
-      "description": "The screenshot shows a confirmation message for a successful submission, including the email, timestamp, submission ID, and uploaded filename.",
+      "file": "CleanShot 2026-01-09 at 04.48.58@2x.png",
+      "folder": "2026-01-09",
+      "description": "The screenshot displays a confirmation message for a successful submission, including the user's email, submission ID, and uploaded file name.",
       "extracted_data": {
+        "submission_ids": [
+          "299b42ee08de"
+        ],
+        "iteration_ids": [],
+        "task_ids": [],
+        "zip_files": [
+          "my-project-id_12345678.zip"
+        ],
+        "statuses": [],
         "error_messages": [],
+        "build_ids": [],
+        "platforms": [],
         "other": {}
       },
-      "described_at": "2026-01-08T14:19:25Z"
+      "organized_at": "2026-01-09T11:49:11Z",
+      "described_at": "2026-01-09T11:49:11Z"
     }
-  ],
-  "date_folders": ["2026-01-08"]
-}
 ```
 
 **Why `error_messages` and `other`?**
