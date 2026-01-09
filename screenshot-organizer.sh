@@ -140,14 +140,19 @@ analyze_screenshot_sync() {
 
     local prompt='Analyze this screenshot and extract information.
 
+IMPORTANT: For zip filenames like "task-name_12345678.zip" or "task-name__12345678.zip":
+- Extract the task ID (part before _ or __): e.g., "my-project-id" from "my-project-id_12345678.zip"
+- Extract the iteration ID (numeric part after _ or __): e.g., "12345678" from "my-project-id_12345678.zip"
+- Include the full zip filename in zip_files
+
 Respond ONLY with valid JSON in this exact format (no other text, no markdown):
 {
   "description": "Brief 1-2 sentence description of what the screenshot shows",
   "extracted_data": {
-    "submission_ids": ["list any submission IDs or UUIDs found"],
-    "iteration_ids": ["list any iteration IDs found"],
-    "task_ids": ["list any task IDs found"],
-    "zip_files": ["list any zip filenames found"],
+    "submission_ids": ["list any submission IDs or UUIDs found - these are typically short hex strings or UUIDs shown as Submission ID"],
+    "iteration_ids": ["extract numeric iteration IDs from zip filenames like task-name_ITERATION.zip"],
+    "task_ids": ["extract task IDs from zip filenames like TASKID_12345.zip - the part before the underscore"],
+    "zip_files": ["list the complete zip filenames found"],
     "statuses": ["list any status indicators like PASS, FAIL, PENDING"],
     "error_messages": ["list any error messages found"],
     "build_ids": ["list any build IDs found"],
@@ -330,18 +335,23 @@ analyze_screenshot() {
 
     local prompt='Analyze this screenshot and extract information.
 
+IMPORTANT: For zip filenames like "task-name_12345678.zip" or "task-name__12345678.zip":
+- Extract the task ID (part before _ or __): e.g., "my-project-id" from "my-project-id_12345678.zip"
+- Extract the iteration ID (numeric part after _ or __): e.g., "12345678" from "my-project-id_12345678.zip"
+- Include the full zip filename in zip_files
+
 Respond ONLY with valid JSON in this exact format (no other text, no markdown):
 {
   "description": "Brief 1-2 sentence description of what the screenshot shows",
   "extracted_data": {
-    "submission_ids": ["list any submission IDs or UUIDs found"],
-    "iteration_ids": ["list any iteration IDs found"],
-    "task_ids": ["list any task IDs found"],
-    "zip_files": ["list any zip filenames found"],
+    "submission_ids": ["list any submission IDs or UUIDs found - these are typically short hex strings or UUIDs shown as Submission ID"],
+    "iteration_ids": ["extract numeric iteration IDs from zip filenames like task-name_ITERATION.zip"],
+    "task_ids": ["extract task IDs from zip filenames like TASKID_12345.zip - the part before the underscore"],
+    "zip_files": ["list the complete zip filenames found"],
     "statuses": ["list any status indicators like PASS, FAIL, PENDING"],
     "error_messages": ["list any error messages found"],
     "build_ids": ["list any build IDs found"],
-    "platforms": ["list any platform names like terminus, harbor"],
+    "platforms": ["list any platform names like terminus, harbor, marlin"],
     "other": {}
   }
 }

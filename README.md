@@ -45,31 +45,37 @@ Now every screenshot becomes a searchable record that links the platform's Submi
 
 **What GPT-4V extracted and corrected:**
 
-1. **Submission ID** → `299b42ee08de` (extracted from screenshot)
-2. **Project ID** → `my-project-id_12345678` (extracted from "File Uploaded" field, maps to Submission ID above)
-3. **Year** → `2026` (missing from screenshot, derived from filename)
-4. **Timezone** → Converted to UTC (screenshot shows local time "7:19 AM", stored as `2026-01-08T14:19:21Z`)
-5. **Full timestamp** → Reconstructed from filename `CleanShot 2026-01-08 at 07.19.21@2x.png`
-6. **Date folder** → `2026-01-08/` (auto-organized based on extracted date)
+1. **Submission ID** → `299b42ee08de` (extracted from "Submission ID" field in screenshot)
+2. **Task ID** → `my-project-id` (parsed from zip filename before the underscore)
+3. **Iteration ID** → `12345678` (parsed from zip filename after the underscore)
+4. **Zip File** → `my-project-id_12345678.zip` (full filename from "File Uploaded" field)
+5. **Year** → `2026` (missing from screenshot, derived from filename)
+6. **Timezone** → Converted to UTC (screenshot shows local time "7:19 AM", stored as `2026-01-08T14:19:21Z`)
+7. **Full timestamp** → Reconstructed from filename `CleanShot 2026-01-08 at 07.19.21@2x.png`
+8. **Date folder** → `2026-01-08/` (auto-organized based on extracted date)
 
 ```json
+{
+  "last_updated": "2026-01-09T11:49:11Z",
+  "processed_files": [
     {
       "file": "CleanShot 2026-01-09 at 04.48.58@2x.png",
       "folder": "2026-01-09",
       "description": "The screenshot displays a confirmation message for a successful submission, including the user's email, submission ID, and uploaded file name.",
       "extracted_data": {
-        "submission_ids": [
-          "299b42ee08de"
-        ],
-        "zip_files": [
-          "my-project-id_12345678.zip"
-        ],
+        "submission_ids": ["299b42ee08de"],
+        "iteration_ids": ["12345678"],
+        "task_ids": ["my-project-id"],
+        "zip_files": ["my-project-id_12345678.zip"],
         "error_messages": [],
         "other": {}
       },
       "organized_at": "2026-01-09T11:49:11Z",
       "described_at": "2026-01-09T11:49:11Z"
     }
+  ],
+  "date_folders": ["2026-01-09"]
+}
 ```
 
 **Why `error_messages` and `other`?**
